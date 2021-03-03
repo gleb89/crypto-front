@@ -1,11 +1,15 @@
 <template>
 <v-container class="mt-5">
+
+   <div style="color:black">{{crypto_id}}</div>
   <v-card v-if="!datapay" class="card-exc mx-auto" color="#26c6da" dark max-width="700">
     {{ onPrice }}
     <v-card-title>
       <span class="title font-weight-light"
         >{{ text_operacion }}<br />
         криптовалюты</span
+
+
       >
     </v-card-title>
     <v-form v-if="!sell" ref="form" v-model="valid" lazy-validation>
@@ -42,10 +46,14 @@
             <v-select
               style="margin-bottom: 1.5rem"
               menu-props="auto"
+              v-model="crypto_id"
               label="Валюта"
               hide-details
               single-line
-            ></v-select>
+              :items="['Fizz', 'Buzz']"
+            >
+
+            </v-select>
           </v-col>
         </v-row>
       </v-container>
@@ -69,10 +77,14 @@
             <v-select
               style="margin-bottom: 1.5rem"
               menu-props="auto"
+              v-model="crypto_id"
               label="Валюта"
               hide-details
               single-line
-            ></v-select>
+              :items="['Fizz', 'Buzz']"
+            >
+
+            </v-select>
           </v-col>
         </v-row>
       </v-container>
@@ -101,11 +113,11 @@
       </v-btn>
     </v-form>
   </v-card>
-  <v-card v-if="datapay" class="card-exc mx-auto" color="#26c6da" dark max-width="700"> 
+  <v-card v-if="datapay" class="card-exc mx-auto" color="#26c6da" dark max-width="700">
     <v-btn @click="datapay = !datapay">
       назад
     </v-btn>
-    
+
 </v-card>
 </v-container>
 </template>
@@ -123,6 +135,7 @@ export default {
       operacion_crypto: "Получаю",
       operacion_rub: "Отдаю (rub)",
       crypto_rub: false,
+      crypto_id:''
     };
   },
   computed: {
@@ -192,5 +205,3 @@ export default {
   color: #009688;
 }
 </style>
-
-

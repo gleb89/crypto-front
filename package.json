@@ -14,7 +14,10 @@
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/fontawesome": "^1.1.2",
     "core-js": "^3.8.3",
-    "nuxt": "^2.14.12"
+    "nuxt": "^2.14.12",
+    "nuxt-socket-io": "^1.1.14",
+    "socket.io": "^3.1.2",
+    "vue-socket.io": "^3.0.10"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.3"
