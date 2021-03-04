@@ -1,14 +1,13 @@
 <template>
 <v-container class="mt-5">
-  
+
   <v-card v-if="!datapay" class="card-exc mx-auto" color="#26c6da" dark max-width="700">
-    
+
     {{ onPrice }}
     <v-card-title>
       <span class="title font-weight-light"
         >{{ text_operacion }}<br />
         криптовалюты </span
-        
       >
     </v-card-title>
     <v-form v-if="!sell" ref="form" v-model="valid" lazy-validation>
@@ -58,7 +57,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <v-btn @click="pasteData" color="success" class="mr-4">
+      <v-btn v-if="result_rub >0" @click="pasteData" color="success" class="mr-4">
         Продолжить
       </v-btn>
     </v-form>
@@ -111,16 +110,67 @@
           </v-col>
         </v-row>
       </v-container>
-      <v-btn @click="pasteData" color="success" class="mr-4">
+      <v-btn v-if="result_rub >0" @click="pasteData" color="success" class="mr-4">
         Продолжить
       </v-btn>
     </v-form>
   </v-card>
   <v-card v-if="datapay" class="card-exc mx-auto" color="#26c6da" dark max-width="700">
     <v-btn @click="datapay = !datapay">
-      назад
+        назад
+    </v-btn>
+      <v-form
+    ref="formdata"
+    v-model="valid"
+    lazy-validation
+  >
+  <div class="mt-5" v-if="text_operacion === 'Продажа'">
+    <p v-if="crypto_id === 'Ethereum'">Отправте {{result_crypto}} {{crypto_id}} на адресс
+      <br>
+       <v-text-field v-model="adreseth" ref="textToCopy"></v-text-field>
+          <v-btn @click="copyText">copy</v-btn>
+       </p>
+    <p v-if="crypto_id === 'Bitcoin'">Отправте {{result_crypto}} {{crypto_id}} на адресс
+      <br>
+         <v-text-field v-model="adresbtc" ref="textToCopy"></v-text-field>
+          <v-btn @click="copyText">copy</v-btn>
+       </p>
+  </div>
+    <div class="mt-5" v-if="text_operacion === 'Покупка'">
+    <p >Отправте {{result_rub}} рублей по следующим реквизитам:
+
+      Номер карты:5469 1100 1336 1464
+      <br>
+      Фио: Туманов Глеб Андреевич
+    </p>
+
+  </div>
+
+    <v-text-field
+      v-model="email"
+      :rules="emailRules"
+      label="E-mail"
+      required
+    ></v-text-field>
+      <span v-if="text_operacion === 'Продажа' ">Вы продаете {{result_crypto}} {{crypto_id}} за {{result_rub}} рублей</span>
+      <span v-if="text_operacion === 'Покупка' ">Вы покупаете {{result_crypto}} {{crypto_id}} за {{result_rub}} рублей</span>
+      <v-checkbox
+      v-model="checkbox"
+      :rules="[v => !!v || 'Подтвердите согласие!']"
+      label="Я согласен(а)"
+      required
+    ></v-checkbox>
+    <v-btn
+      :disabled="!valid"
+      color="success"
+      class="mr-4"
+      @click="validate"
+    >
+      я оплатил
     </v-btn>
 
+
+  </v-form>
 </v-card>
 </v-container>
 </template>
@@ -132,14 +182,21 @@ export default {
       await store.dispatch("crypto/fetch");
     }
   },
-
   data() {
     return {
+      valid: true,
+      emailRules: [
+        v => !!v || 'E-mail обязателен',
+        v => /.+@.+\..+/.test(v) || 'E-mail неверно введен',
+      ],
       datapay:false,
       sell: false,
       result_crypto: 0,
       result_rub: 0,
       valid: "",
+      adreseth:'0x8E9fDeEbfb3cF8b9BeA65822AF50953Abe021c93',
+      adresbtc:'1DcztHZTirLNN3fMu2s3wJBmq2QchXeLtR',
+      checkbox: false,
       text_operacion: "Покупка",
       operacion_crypto: "Получаю",
       operacion_rub: "Отдаю (rub)",
@@ -147,22 +204,22 @@ export default {
       crypto_id:'',
       list_crypto:[],
       cyrs_bitcoin:0,
+      email:'',
       cyrs_ethereum:0,
       cyrs_crypto:''
-      
+
     };
   },
   computed: {
     isDisabled() {
     if(this.crypto_id){
-      if (this.text_operacion === "Покупка") {
-        this.text_operacion = "Продажа";
-        (this.operacion_crypto = "Отдаю "),
-          (this.operacion_rub = "Получаю (rub)");
-      } else {
-        this.text_operacion = "Покупка";
-        (this.operacion_crypto = "Получаю "),
-          (this.operacion_rub = "Отдаю (rub)");
+      if(this.text_operacion === "Продажа"){
+        this.operacion_crypto = "Отдаю "
+        this.operacion_rub = "Получаю (rub)"
+      }
+      else{
+          this.operacion_crypto = "Получаю "
+          this.operacion_rub = "Отдаю(rub)"
       }
       return false
     }
@@ -171,7 +228,7 @@ export default {
       this.operacion_crypto = 'Выберите валюту'
       return true
     }
-     
+
     },
      crypto_list(){
       let list = []
@@ -180,28 +237,28 @@ export default {
         if(i.coin === 'Bitcoin'){
           this.cyrs_bitcoin = i.price
         }
-        if(i.coin === 'Ethereum'){      
+        if(i.coin === 'Ethereum'){
         this.cyrs_ethereum = i.price
         }
       }
       if(this.crypto_id){
-        
+
         if(this.crypto_id === 'Bitcoin'){
-           this.cyrs_crypto = String(this.cyrs_bitcoin) 
+           this.cyrs_crypto = String(this.cyrs_bitcoin)
         }
-        if(this.crypto_id === 'Ethereum'){      
-         this.cyrs_crypto = String(this.cyrs_ethereum) 
+        if(this.crypto_id === 'Ethereum'){
+         this.cyrs_crypto = String(this.cyrs_ethereum)
         }
       }
       this.list_crypto = list
       return this.list_crypto
-      
+
     },
     onPrice() {
       if (!this.crypto_rub) {
         if (this.result_rub > 0) {
           this.result_crypto = 0;
-          this.result_crypto =  this.result_rub/this.cyrs_crypto; 
+          this.result_crypto =  this.result_rub/this.cyrs_crypto;
         }
         if (this.result_rub === "") {
           this.result_crypto = 0;
@@ -209,7 +266,7 @@ export default {
       }
       if (this.crypto_rub && this.result_crypto > 0) {
         this.result_rub = 0;
-        this.result_rub = this.cyrs_crypto*this.result_crypto 
+        this.result_rub = this.cyrs_crypto*this.result_crypto
       }
       if (this.crypto_rub && this.result_crypto === "") {
         this.result_rub = 0;
@@ -217,10 +274,26 @@ export default {
     },
   },
   methods: {
+    copyText () {
+          let textToCopy = this.$refs.textToCopy.$el.querySelector('input')
+          textToCopy.select()
+          document.execCommand("copy");
+      },
+    validate () {
+        this.$refs.formdata.validate()
+    },
     pasteData(){
         this.datapay = true
               },
+
     reverseExc() {
+      if(this.text_operacion === "Покупка"){
+        this.text_operacion = "Продажа"
+
+      }
+      else{
+        this.text_operacion = "Покупка"
+      }
       this.sell = !this.sell;
       this.result_crypto = 0;
       this.result_rub = 0;
@@ -234,7 +307,6 @@ export default {
 .card-exc {
   padding: 2rem;
 }
-
 @media (max-width: 500px) {
   .card-exc {
     margin-top: 1rem;
