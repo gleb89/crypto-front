@@ -7,19 +7,36 @@
         <span>Speed-crypto</span>
         <hr>
         <h1>Покупка и продажа криптовалюты 24/7</h1>
-
       </div>
-      <Exchange/>
+      <Exchange />
     </v-col>
   </v-row>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 import Exchange from '~/components/Exchange.vue'
 
 
 export default {
+
+  async fetch({ store }) {
+    if (store.getters["crypto/crypto"].length === 0) {
+      await store.dispatch("crypto/fetch");
+    }
+  },
+  computed:{
+    crypto_list(){
+      return this.$store.getters["crypto/crypto"];
+    }
+  },
+  data(){
+    return{
+      crypto_id:''
+    }
+  },
   components: {
     Exchange
   }
