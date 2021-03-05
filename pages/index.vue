@@ -3,12 +3,13 @@
 
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
+
       <div style="color:black">
         <span>Speed-crypto</span>
         <hr>
         <h1>Покупка и продажа криптовалюты 24/7</h1>
       </div>
-      <Exchange />
+      <Exchange/>
     </v-col>
   </v-row>
   </div>
@@ -34,7 +35,8 @@ export default {
   },
   data(){
     return{
-      crypto_id:''
+      crypto_id:'',
+      indallert:false
     }
   },
   components: {

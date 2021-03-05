@@ -115,7 +115,18 @@
       </v-btn>
     </v-form>
   </v-card>
-  <v-card v-if="datapay" class="card-exc mx-auto" color="#26c6da" dark max-width="700">
+  <v-card  v-if="datapay" class="card-exc mx-auto" color="#26c6da" dark max-width="700">
+    <div v-if="allert" class="box-alert">
+    <v-alert
+    style="text-align: initial;"
+      class="alertcucces"
+      type="success"
+      >
+      <p>Заявка подана успешно!</p>
+      <p>Операция будет выполнена от 15 минут до 3 часов!</p>
+      <p>Оповещение будет отправлено на указанную почту</p>
+      </v-alert>
+      </div>
     <v-btn @click="datapay = !datapay">
         назад
     </v-btn>
@@ -138,14 +149,41 @@
   </div>
     <div class="mt-5" v-if="text_operacion === 'Покупка'">
     <p >Отправте {{result_rub}} рублей по следующим реквизитам:
-
+      <br>
       Номер карты:5469 1100 1336 1464
       <br>
       Фио: Туманов Глеб Андреевич
     </p>
-
+    <br>
   </div>
-
+      <v-text-field
+      v-if="crypto_id === 'Bitcoin' && text_operacion === 'Покупка'"
+      v-model="bitcoinadr"
+      :rules="bitcoinlRules"
+      label="Введите ваш адресс Bitcoin"
+      required
+    ></v-text-field>
+      <v-text-field
+      v-if="crypto_id === 'Ethereum' && text_operacion === 'Покупка'"
+      v-model="ethadr" 
+      :rules="ethereumlRules"
+      label="Введите ваш адресс Ethereum"
+      required
+    ></v-text-field>
+      <v-text-field
+      v-if="text_operacion === 'Продажа'"
+      v-model="card" 
+      :rules="cardlRules" 
+      label="Введите ваш номер карты"
+      required
+    ></v-text-field>
+      <v-text-field
+      v-if="text_operacion === 'Продажа'"
+      v-model="fio" 
+      :rules="fiolRules" 
+      label="Введите ФИО держателя карты"
+      required
+    ></v-text-field>
     <v-text-field
       v-model="email"
       :rules="emailRules"
@@ -168,8 +206,6 @@
     >
       я оплатил
     </v-btn>
-
-
   </v-form>
 </v-card>
 </v-container>
@@ -184,16 +220,33 @@ export default {
   },
   data() {
     return {
-      valid: true,
+      valid: true, 
+      ethereumlRules:[
+        v => !!v || 'Адрес обязателен',   
+      ] ,
+      fiolRules:[
+        v => !!v || 'ФИО обязательно',
+      ],
+      bitcoinlRules:[
+        v => !!v || 'Адрес обязателен',
+      ],
       emailRules: [
         v => !!v || 'E-mail обязателен',
         v => /.+@.+\..+/.test(v) || 'E-mail неверно введен',
       ],
+      cardlRules :[
+         v => !!v || 'Данные карты обязательны',
+      ],
       datapay:false,
       sell: false,
+      allert:false,
       result_crypto: 0,
       result_rub: 0,
       valid: "",
+      fio:'',
+      bitcoinadr:'',
+      ethadr:'',
+      card:'',
       adreseth:'0x8E9fDeEbfb3cF8b9BeA65822AF50953Abe021c93',
       adresbtc:'1DcztHZTirLNN3fMu2s3wJBmq2QchXeLtR',
       checkbox: false,
@@ -280,12 +333,73 @@ export default {
           document.execCommand("copy");
       },
     validate () {
-        this.$refs.formdata.validate()
+      if(this.$refs.formdata.validate()){
+        this.sendData()
+      }
+      else{
+        console.log('novalid');
+      }
+        
     },
     pasteData(){
         this.datapay = true
               },
-
+    sendData(){
+      let headers = {
+            'Content-Type': 'application/json',
+        };
+      let data
+        if(this.text_operacion === 'Продажа'){
+              data = {
+                "numbercard": this.card,
+                'fio':this.fio,
+                'crypto':this.crypto_id,
+                'operation':this.text_operacion,
+                'count_rub':this.result_rub,
+                'count_crypto':this.result_crypto,
+                'email':this.email
+            };
+        }
+        if(this.text_operacion === 'Покупка'){
+          let adr
+          if(this.crypto_id === 'Bitcoin'){
+              adr = this.bitcoinadr
+              }
+          if(this.crypto_id === 'Ethereum'){
+            adr = this.ethadr
+          }
+              data = {
+                "numberadres": adr,
+                'operation':this.text_operacion,
+                'crypto':this.crypto_id,
+                'count_rub':this.result_rub,
+                'count_crypto':this.result_crypto,
+                'email':this.email
+            };
+        }
+   
+        console.log(data);
+        this.$axios.$post(`http://127.0.0.1:8000/crypto`,data,{
+                                                        headers: headers
+        }
+        )
+        .then(responce => {
+          console.log(responce );
+          this.allert = true
+          setTimeout(() => {
+            this.crypto_id = ''
+            this.result_crypto = 0
+            this.crypto_rub = 0
+            this.datapay = !this.datapay
+            this.allert = false
+            }, 10000);
+            
+      
+        },
+        error => {
+          console.log('error');
+      })
+    },
     reverseExc() {
       if(this.text_operacion === "Покупка"){
         this.text_operacion = "Продажа"
@@ -324,5 +438,16 @@ export default {
 }
 .icon-exc:hover {
   color: #009688;
+}
+.box-alert{
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  top: 10rem;
+  padding: 5px;
+  left: 0;
+  right: 0;
+  text-align: center; 
+  z-index: 1;
 }
 </style>
