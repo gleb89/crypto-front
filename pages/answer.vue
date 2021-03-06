@@ -13,6 +13,7 @@
 <p><span><fa class="icon-answ" icon="bookmark"></fa></span> Заполните все поля формы обмена . Нажмите кнопку «Продолжить».</p>
 <p><span><fa class="icon-answ" icon="bookmark"></fa></span> Оплатите заявку.  Для этого следует совершить перевод необходимой суммы, следуя инструкциям в форме оплаты.</p>
 <p><span><fa class="icon-answ" icon="bookmark"></fa></span> Заполните все поля  формы данных. Нажмите кнопку «Оплатить».</p>
+<p><span><fa class="icon-answ" icon="bookmark"></fa></span>Зачисление средств или криптовалют производиться по времени от 30 минут до 3-x часов.</p>
 
       </div>
     </v-col>
