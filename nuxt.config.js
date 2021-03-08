@@ -3,15 +3,20 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - exchange',
-    title: 'exchange',
+
+    title: 'Крипто обмен',
     htmlAttrs: {
       lang: 'ru'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      { hid: 'description', name: 'description', content:'Покупка и продажа Bitcoin,Ethereum' },
+      { hid: 'keywords', name: 'keywords', content:'Bitcoin,Ethereum,Покупка криптовалют,продажа криптовалют,лучший обмен криптовалют' },
+      {  name: 'yandex-verification', content:'5808cf08000a5c14' },
+      {  name: 'google-site-verification', content:'vQyfRAERP3QOfCZ65Y0Cp8Q7aZCVwChfovbwDgMLCgk' },
+
+
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -42,7 +47,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-  
+
   ],
 
 

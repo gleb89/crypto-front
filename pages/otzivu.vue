@@ -68,3 +68,15 @@
     </v-card>
   </div>
 </template>
+
+<script>
+export default {
+    head:{
+    title:'Отзывы'
+  },
+  meta:[
+    { hid: 'description', name: 'description', content:'Обмен криптовалют' },
+    { hid: 'homepage', name: 'keywords', content:'криптовалюты,bitcoin,ethereum' }
+  ],
+}
+</script>

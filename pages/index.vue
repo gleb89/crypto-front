@@ -19,6 +19,13 @@ import { mapState } from "vuex";
 import Exchange from "~/components/Exchange.vue";
 
 export default {
+  head:{
+    title:'Главная'
+  },
+  meta:[
+    { hid: 'description', name: 'description', content:'Обмен криптовалют' },
+    { hid: 'homepage', name: 'keywords', content:'криптовалюты,bitcoin,ethereum' }
+  ],
   async fetch({ store }) {
     if (store.getters["crypto/crypto"].length === 0) {
       await store.dispatch("crypto/fetch");

@@ -8,7 +8,7 @@
         class="mb-5"
       >
       <div class="text-center" style="color:black">
-        <h2 class="mb-4">Для обмена вам необходимо выполнить несколько шагов:</h2> 
+        <h2 class="mb-4">Для обмена вам необходимо выполнить несколько шагов:</h2>
         <hr>
 <p><span><fa class="icon-answ" icon="bookmark"></fa></span> Заполните все поля формы обмена . Нажмите кнопку «Продолжить».</p>
 <p><span><fa class="icon-answ" icon="bookmark"></fa></span> Оплатите заявку.  Для этого следует совершить перевод необходимой суммы, следуя инструкциям в форме оплаты.</p>
@@ -19,6 +19,18 @@
     </v-col>
   </v-row>
 </template>
+
+<script>
+export default {
+    head:{
+    title:'Вопросы и ответы'
+  },
+  meta:[
+    { hid: 'description', name: 'description', content:'Обмен криптовалют' },
+    { hid: 'homepage', name: 'keywords', content:'криптовалюты,bitcoin,ethereum' }
+  ],
+}
+</script>
 
 <style scoped>
 .icon-answ{
