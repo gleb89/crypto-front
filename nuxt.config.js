@@ -6,7 +6,7 @@ export default {
     titleTemplate: '%s - exchange',
     title: 'exchange',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'ru'
     },
     meta: [
       { charset: 'utf-8' },
@@ -25,6 +25,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -41,15 +42,10 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    'nuxt-socket-io',
+  
   ],
-  io: {
-    // module options
-    sockets: [{
-      name: 'main',
-      url: 'http://localhost:3000'
-    }]
-  },
+
+
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},

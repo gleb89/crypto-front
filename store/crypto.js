@@ -21,7 +21,7 @@ export const actions = {
       "Content-Type": "application/json"
     };
     const crypto = await this.$axios
-      .$get(`http://127.0.0.1:8000/crypto`, {
+      .$get(`https://apicrypto.ru/crypto`, {
         headers: headers
       })
     commit('setCrypto', crypto)
